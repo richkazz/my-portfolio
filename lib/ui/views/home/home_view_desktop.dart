@@ -21,13 +21,13 @@ class HomeDesktopView extends StatelessWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.all(60),
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: uiHelpers!.surfaceColor,
             ),
-            child: Column(
+            child: ListView(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

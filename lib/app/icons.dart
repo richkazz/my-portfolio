@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:icons_plus/icons_plus.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 //*Menu Items
 mixin MenuIcons {
@@ -14,43 +14,43 @@ mixin MenuIcons {
 }
 
 mixin ProjectIcons {
-  static const IconData githubIcon = Bootstrap.github;
-  static const IconData playstoreIcon = FontAwesome.google_play;
-  static const IconData folderIcon = Bootstrap.folder;
-  static const IconData websiteIcon = Bootstrap.window_desktop;
+  static const IconData githubIcon = FontAwesomeIcons.github;
+  static const IconData playstoreIcon = FontAwesomeIcons.googlePlay;
+  static const IconData folderIcon = FontAwesomeIcons.folder;
+  static const IconData websiteIcon = Icons.web;
 }
 
 mixin ContactIcons {
-  static const IconData githubIcon = Bootstrap.github;
-  static const IconData twitterIcon = Bootstrap.twitter;
-  static const IconData linkedinIcon = Bootstrap.linkedin;
-  static const IconData instagramIcon = Bootstrap.instagram;
-  static const IconData facebookIcon = Bootstrap.facebook;
-  static const IconData telegramIcon = Bootstrap.telegram;
+  static const IconData githubIcon = FontAwesomeIcons.github;
+  static const IconData twitterIcon = FontAwesomeIcons.twitter;
+  static const IconData linkedinIcon = FontAwesomeIcons.linkedin;
+  static const IconData instagramIcon = FontAwesomeIcons.instagram;
+  static const IconData facebookIcon = FontAwesomeIcons.facebook;
+  static const IconData telegramIcon = FontAwesomeIcons.telegram;
 }
 
 mixin FormIcon {
-  static const IconData nameIcon = Bootstrap.person;
-  static const IconData messageIcon = Bootstrap.messenger;
+  static const IconData nameIcon = FontAwesomeIcons.person;
+  static const IconData messageIcon = FontAwesomeIcons.message;
 }
 mixin ExperienceIcon {
-  static const IconData arrowIcon = Bootstrap.play;
-  static const IconData timeIcon = Bootstrap.clock;
+  static const IconData arrowIcon = FontAwesomeIcons.play;
+  static const IconData timeIcon = FontAwesomeIcons.clock;
 }
 mixin ToastIcons {
-  static const IconData successIcon = Bootstrap.check_circle_fill;
+  static const IconData successIcon = Icons.check_circle_rounded;
 }
 
 mixin TechnologiesIcon {
-  static const IconData dotNetIcon = FontAwesome.microsoft;
-  static const IconData javaIcon = FontAwesome.java;
-  static const IconData pythonIcon = FontAwesome.python;
-  static const IconData githubIcon = FontAwesome.github;
+  static const IconData dotNetIcon = FontAwesomeIcons.microsoft;
+  static const IconData javaIcon = FontAwesomeIcons.java;
+  static const IconData pythonIcon = FontAwesomeIcons.python;
+  static const IconData githubIcon = FontAwesomeIcons.github;
 }
 
 mixin SkillDisplayIcons {
-  static const IconData appIcon = FontAwesome.mobile;
-  static const IconData websiteIcon = FontAwesome.laptop;
-  static const IconData mlIcon = FontAwesome.brain;
-  static const IconData databaseIcon = FontAwesome.database;
+  static const IconData appIcon = FontAwesomeIcons.mobile;
+  static const IconData websiteIcon = FontAwesomeIcons.laptop;
+  static const IconData mlIcon = FontAwesomeIcons.brain;
+  static const IconData databaseIcon = FontAwesomeIcons.database;
 }

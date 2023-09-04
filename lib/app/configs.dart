@@ -33,7 +33,7 @@ mixin EducationDetails {
 
   static const String schoolTimeline = '2015 - 2019';
   static const String universityName = 'Lagos State University';
-  static const String universityTimeline = '2021 - date';
+  static const String universityTimeline = '2021 - present';
 
   static const String universityStream = 'Computer Science and Engineering';
   static const String schoolStream = 'Stream 2';
@@ -106,6 +106,15 @@ mixin PersonalDetails {
         //websiteLink: 'https://hostel-app-test.herokuapp.com/login',
         description: 'A website to plan your food',
         tools: ['C#', '.NET Core', 'Javascript', 'Html', 'CSS']),
+    Project(
+        id: '3',
+        type: ['Website', 'Application'],
+        //websiteLink: 'https://shashiben.github.io',
+        description:
+            'Created portfolio using flutter,Supports for mac os,windows,linux,web,ios,android',
+        githubLink: 'https://github.com/richkazz/my-portfolio',
+        title: 'Portfolio',
+        tools: ['Flutter']),
   ];
   static const List<String> skillsList = [
     'Flutter',
