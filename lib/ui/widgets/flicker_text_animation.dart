@@ -66,14 +66,14 @@ class _FlickerTextAnimationState extends State<FlickerTextAnimation> {
   void initState() {
     widget.controller.addStatusListener((status) {
       if (status == AnimationStatus.forward) {
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             isAnimating = true;
           });
         });
       }
       if (status == AnimationStatus.completed) {
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             isAnimating = false;
           });
