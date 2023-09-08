@@ -9,13 +9,30 @@ class TranslateOnHover extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final Matrix4 nonHoverTransform = Matrix4.identity();
-    final Matrix4 hoverTransform = Matrix4.identity()..translate(0, -5);
+    final Matrix4 hoverTransform = Matrix4(
+      1.1,
+      0,
+      0,
+      0,
+      0,
+      1.1,
+      0,
+      0,
+      0,
+      0,
+      1.1,
+      0,
+      0,
+      0,
+      0,
+      1,
+    );
     final ValueNotifier<bool> isHovered = useState(false);
     return MouseRegion(
       onEnter: (PointerEnterEvent e) => isHovered.value = true,
       onExit: (PointerExitEvent e) => isHovered.value = false,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 400),
         transform: isHovered.value ? hoverTransform : nonHoverTransform,
         child: child,
       ),

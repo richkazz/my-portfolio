@@ -1,334 +1,167 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../../core/models/timeline_experience.dart';
 import '../../core/utils/ScreenUiHelper.dart';
-import '../../core/utils/adaptive.dart';
-import 'custom shapes/tree_painter.dart';
 
 class ExperienceTree extends StatelessWidget {
-  const ExperienceTree({
-    required this.experienceData,
-    this.head,
-    this.widthOfTree,
-    this.headTitle,
-    this.headTitleStyle,
-    this.tailTitleStyle,
-    this.tail,
-    this.tailTitle,
-    this.headBackgroundColor,
-    this.tailBackgroundColor,
-    this.scrollController,
-  });
-
-  final Widget? head;
-  final double? widthOfTree;
-  final String? headTitle;
-  final TextStyle? headTitleStyle;
-  final TextStyle? tailTitleStyle;
-  final Color? headBackgroundColor;
-  final String? tailTitle;
-  final Color? tailBackgroundColor;
-  final Widget? tail;
+  const ExperienceTree({Key? key, required this.experienceData})
+      : super(key: key);
   final List<ExperienceTimeline> experienceData;
-  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
-    final ScreenUiHelper uiHelper = ScreenUiHelper.fromContext(context);
-    return ListView(
-      controller: scrollController,
-      children: [
-        Center(
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: headBackgroundColor ??
-                  uiHelper.primaryColor!.withOpacity(0.1),
-            ),
-            child: Text(
-              headTitle!,
-              style: headTitleStyle ??
-                  Theme.of(context)
-                      .textTheme
-                      .headline6!
-                      .copyWith(color: uiHelper.primaryColor),
-            ),
+    return ListView.builder(
+      padding: const EdgeInsets.all(60),
+      itemCount: experienceData.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: ExperienceItem(
+            experienceTimeline: experienceData[index],
           ),
-        ),
-        Column(
-          children: _buildExperienceBranches(
-            context: context,
-            experienceData: experienceData,
-          ),
-        ),
-        Center(
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: tailBackgroundColor ??
-                  uiHelper.primaryColor!.withOpacity(0.1),
-            ),
-            child: Text(
-              tailTitle!,
-              style: tailTitleStyle ??
-                  Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(color: uiHelper.primaryColor),
-            ),
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
-
-  List<Widget> _buildExperienceBranches({
-    required BuildContext context,
-    required List<ExperienceTimeline> experienceData,
-  }) {
-    final List<Widget> branchWidgets = [];
-    for (var index = 0; index < experienceData.length; index++) {
-      branchWidgets.add(
-        ExperienceBranch(
-          company: experienceData[index].title,
-          position: experienceData[index].position,
-          roles: experienceData[index].description,
-          location: '',
-          duration: experienceData[index].timePeriod,
-          width: widthOfTree,
-          height: isDisplaySmallDesktop(context)
-              ? assignHeight(context: context, fraction: 0.45)
-              : assignHeight(context: context, fraction: 0.35),
-        ),
-      );
-    }
-
-    return branchWidgets;
-  }
 }
 
-class ExperienceBranch extends StatefulWidget {
-  const ExperienceBranch({
-    Key? key,
-    this.width,
-    this.stalk = 0.1,
-    this.height = 200,
-    this.company,
-    this.companyUrl,
-    this.location,
-    this.duration,
-    this.position,
-    this.roles,
-    this.customPainter,
-  }) : super(key: key);
-
-  final double? width;
-  final double stalk;
-  final double height;
-  final String? company;
-  final String? companyUrl;
-  final String? location;
-  final String? duration;
-  final String? position;
-  final List<String>? roles;
-  final CustomPainter? customPainter;
-
-  @override
-  _ExperienceBranchState createState() => _ExperienceBranchState();
-}
-
-class _ExperienceBranchState extends State<ExperienceBranch> {
-  GlobalKey roleLeafKey = GlobalKey();
-  GlobalKey locationLeafKey = GlobalKey();
-  double? offsetRoleLeaf;
-  double? offsetLocationLeaf;
-
-  @override
-  void initState() {
-    offsetRoleLeaf = (widget.height / 5) - 10;
-    offsetLocationLeaf = (widget.height / 2) - 16;
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _getHeightOfRoleLeaf();
-    });
-    super.initState();
-  }
-
-  void _getHeightOfRoleLeaf() {
-    final RenderBox roleLeafRenderBox =
-        roleLeafKey.currentContext!.findRenderObject() as RenderBox;
-    final RenderBox locationLeafRenderBox =
-        locationLeafKey.currentContext!.findRenderObject() as RenderBox;
-    final roleLeafHeight = roleLeafRenderBox.size.height;
-    final locationLeafHeight = locationLeafRenderBox.size.height;
-    setState(() {
-      offsetRoleLeaf = (widget.height / 2) - (roleLeafHeight / 2);
-      offsetLocationLeaf = (widget.height / 2) - (locationLeafHeight / 2);
-    });
-  }
-
+class ExperienceItem extends HookWidget {
+  const ExperienceItem({Key? key, required this.experienceTimeline})
+      : super(key: key);
+  final ExperienceTimeline experienceTimeline;
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      foregroundPainter: widget.customPainter ?? TreePainter(),
-      child: SizedBox(
-        width: widget.width,
-        height: widget.height,
-        child: Stack(
-          children: [
-            Positioned(
-              width: widget.width! / 2,
-              top: offsetLocationLeaf,
-              left: 0,
-              child: Container(
-                key: locationLeafKey,
-                padding: EdgeInsets.only(right: widget.width! * widget.stalk),
-                child: LocationDateLeaf(
-                  duration: widget.duration,
-                  location: widget.location,
+    final theme = Theme.of(context);
+    final uiHelper = ScreenUiHelper.fromContext(context);
+    const duration = Duration(seconds: 1);
+    final controller = useAnimationController(
+      duration: duration,
+    );
+    late Animation<double> tween =
+        Tween<double>(begin: 0, end: 1).animate(controller);
+    controller.forward();
+    return AnimatedBuilder(
+        animation: tween,
+        builder: (context, child) {
+          return AnimatedContainer(
+            duration: duration,
+            margin: tween.isCompleted
+                ? const EdgeInsets.only(top: 0)
+                : const EdgeInsets.only(top: 50),
+            child: Opacity(
+              opacity: tween.value,
+              child: Card(
+                color: theme.colorScheme.background.withOpacity(0.2),
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    experienceTimeline.title,
+                                    style: theme.textTheme.subtitle1!.copyWith(
+                                        fontSize: 18,
+                                        color: uiHelper.textPrimaryColor),
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    '@${experienceTimeline.position}',
+                                    style: theme.textTheme.subtitle2!.copyWith(
+                                        fontStyle: FontStyle.italic,
+                                        color: uiHelper.primaryColor),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.timer_outlined,
+                                    size: 17,
+                                    color: uiHelper.textPrimaryColor,
+                                  ),
+                                  Text(
+                                    '@${experienceTimeline.timePeriod}',
+                                    style: theme.textTheme.labelMedium!
+                                        .copyWith(
+                                            fontWeight: FontWeight.w200,
+                                            fontStyle: FontStyle.normal,
+                                            color: uiHelper.textPrimaryColor),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Accomplishments',
+                                style: theme.textTheme.headlineSmall!.copyWith(
+                                    fontSize: 18,
+                                    color: uiHelper.textPrimaryColor),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              ..._buildRoles(
+                                  context: context,
+                                  roles: experienceTimeline.description),
+                            ]),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Tools Used',
+                              style: theme.textTheme.subtitle1!.copyWith(
+                                  fontSize: 18,
+                                  decoration: TextDecoration.underline,
+                                  color: uiHelper.textPrimaryColor),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Wrap(
+                              spacing: 10,
+                              runSpacing: 10,
+                              children: experienceTimeline.tools
+                                  .map<Widget>((e) => Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TranslateOnHoverChangeColor(text: e)
+                                        ],
+                                      ))
+                                  .toList(),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
-            Positioned(
-              width: widget.width! / 2,
-              top: offsetRoleLeaf,
-              right: 0,
-              child: Container(
-                key: roleLeafKey,
-                padding: EdgeInsets.only(
-                  left: widget.width! * widget.stalk,
-                ),
-                child: RoleLeaf(
-                  company: widget.company,
-                  onTap: () {},
-                  position: widget.position,
-                  roles: widget.roles,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class LocationDateLeaf extends StatelessWidget {
-  const LocationDateLeaf({
-    required this.duration,
-    required this.location,
-    this.durationIcon,
-    this.locationIcon,
-    this.locationTextStyle,
-    this.durationTextStyle,
-  });
-
-  final String? duration;
-  final TextStyle? durationTextStyle;
-  final String? location;
-  final TextStyle? locationTextStyle;
-  final Icon? locationIcon;
-  final Icon? durationIcon;
-
-  @override
-  Widget build(BuildContext context) {
-    final ScreenUiHelper uiHelper = ScreenUiHelper.fromContext(context);
-    final ThemeData theme = Theme.of(context);
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                duration!,
-                style: durationTextStyle ??
-                    theme.textTheme.bodyText2!
-                        .copyWith(color: uiHelper.textPrimaryColor),
-              ),
-              const SizedBox(width: 4),
-              Icon(
-                Icons.access_time,
-                color: uiHelper.primaryColor,
-                size: 18,
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                location!,
-                style: locationTextStyle ??
-                    theme.textTheme.bodyText2!
-                        .copyWith(color: uiHelper.textSecondaryColor),
-              ),
-              const SizedBox(width: 4),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class RoleLeaf extends StatelessWidget {
-  const RoleLeaf({
-    required this.company,
-    required this.position,
-    required this.roles,
-    this.companyTextStyle,
-    this.positionTextStyle,
-    this.roleTextStyle,
-    this.onTap,
-  });
-
-  final String? company;
-  final String? position;
-  final List<String>? roles;
-  final TextStyle? companyTextStyle;
-  final TextStyle? positionTextStyle;
-  final TextStyle? roleTextStyle;
-  final GestureTapCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final ScreenUiHelper uiHelper = ScreenUiHelper.fromContext(context);
-    final ThemeData theme = Theme.of(context);
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InkWell(
-            onTap: onTap,
-            child: Text(
-              company!,
-              style: companyTextStyle ??
-                  theme.textTheme.subtitle1!
-                      .copyWith(fontSize: 18, color: uiHelper.primaryColor),
-            ),
-          ),
-          Text(
-            position!,
-            style: positionTextStyle ??
-                theme.textTheme.subtitle2!.copyWith(
-                    fontStyle: FontStyle.italic,
-                    color: uiHelper.textPrimaryColor),
-          ),
-          const SizedBox(height: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: _buildRoles(
-              roles: roles!,
-              context: context,
-            ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 
   List<Widget> _buildRoles({
@@ -342,9 +175,9 @@ class RoleLeaf extends StatelessWidget {
       roleWidgets.add(
         Role(
           role: roles[index],
-          roleTextStyle: roleTextStyle ??
-              theme.textTheme.bodyText2!
-                  .copyWith(color: uiHelper.textSecondaryColor),
+          roleTextStyle: theme.textTheme.labelLarge!
+              .copyWith(color: uiHelper.textSecondaryColor),
+          iconSize: 25,
         ),
       );
       roleWidgets.add(const SizedBox(height: 8));
@@ -354,13 +187,93 @@ class RoleLeaf extends StatelessWidget {
   }
 }
 
+class TranslateOnHoverChangeColor extends HookWidget {
+  final String text;
+
+  const TranslateOnHoverChangeColor({Key? key, required this.text})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final Matrix4 nonHoverTransform = Matrix4.identity();
+    final Matrix4 hoverTransform = Matrix4(
+      1.02,
+      0,
+      0,
+      0,
+      0,
+      1.02,
+      0,
+      0,
+      0,
+      0,
+      1.02,
+      0,
+      0,
+      0,
+      0,
+      1,
+    );
+    final uiHelper = ScreenUiHelper.fromContext(context);
+    final theme = Theme.of(context);
+    final ValueNotifier<bool> isHovered = useState(false);
+    const duration = Duration(seconds: 1);
+    final controller = useAnimationController(
+      duration: duration,
+    );
+    late Animation<Color?> colorAnimation = ColorTween(
+      begin: uiHelper.textPrimaryColor,
+      end: uiHelper.primaryColor,
+    ).animate(controller);
+
+    isHovered.addListener(() {
+      if (isHovered.value) {
+        controller.forward();
+      } else {
+        controller.reverse();
+      }
+    });
+
+    return MouseRegion(
+      onEnter: (PointerEnterEvent e) => isHovered.value = true,
+      onExit: (PointerExitEvent e) => isHovered.value = false,
+      child: AnimatedContainer(
+        duration: duration,
+        transform: isHovered.value ? hoverTransform : nonHoverTransform,
+        padding: const EdgeInsets.only(top: 5, bottom: 5, right: 7, left: 7),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: isHovered.value
+                ? uiHelper.primaryColor!.withOpacity(0.2)
+                : null,
+            border: Border.all(
+                width: isHovered.value ? 3 : 1,
+                color: isHovered.value
+                    ? uiHelper.primaryColor!
+                    : uiHelper.textPrimaryColor!)),
+        child: Center(
+          child: AnimatedBuilder(
+              animation: colorAnimation,
+              builder: (context, child) {
+                return Text(
+                  text,
+                  style: theme.textTheme.bodyLarge!.copyWith(
+                      fontStyle: FontStyle.italic, color: colorAnimation.value),
+                );
+              }),
+        ),
+      ),
+    );
+  }
+}
+
 class Role extends StatelessWidget {
   const Role({
+    Key? key,
     required this.role,
     this.roleTextStyle,
     this.icon = Icons.arrow_right,
     this.iconSize = 18,
-  });
+  }) : super(key: key);
 
   final String role;
   final TextStyle? roleTextStyle;

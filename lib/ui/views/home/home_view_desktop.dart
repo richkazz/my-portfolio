@@ -48,6 +48,7 @@ class HomeDesktopView extends StatelessWidget {
                       ],
                     ),
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         TranslateOnHover(
                           child: TextButton(
@@ -80,90 +81,130 @@ class HomeDesktopView extends StatelessWidget {
                 SizedBox(
                   height: uiHelpers!.width! * 0.05,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: model!.skills.keys
-                          .map((e) => Container(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8),
-                                width: uiHelpers!.width! * 0.28,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: uiHelpers!.surfaceColor,
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle),
-                                          child: Image.asset(
-                                            model!.skills[e]!,
-                                            width: 40,
-                                            height: 40,
-                                          )),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        e,
-                                        style: uiHelpers!.title,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                LayoutBuilder(builder: (context, constraint) {
+                  if (constraint.maxWidth < 550) {
+                    return Column(
                       children: [
-                        SizedBox(
-                          width: uiHelpers!.width! * 0.3,
-                          child: Text(
-                            PersonalDetails.shortIntro,
-                            style: uiHelpers!.body!.copyWith(
-                                fontWeight: FontWeight.w400,
-                                height: 2,
-                                color: uiHelpers!.textPrimaryColor),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        IconWrrapper(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 12),
-                          onTap: () =>
-                              model!.navigateToUrl(SocialLinks.githubLink),
-                          child: Row(
-                            children: [
-                              Icon(
-                                ContactIcons.githubIcon,
-                                color: uiHelpers!.textPrimaryColor,
-                              ),
-                              const SizedBox(
-                                width: 6,
-                              ),
-                              Text(
-                                'Github',
-                                style: uiHelpers!.buttonStyle,
-                              )
-                            ],
-                          ),
-                        )
+                        SectionTwoRight(uiHelpers: uiHelpers, model: model),
+                        SkillListContent(model: model, uiHelpers: uiHelpers),
                       ],
-                    )
-                  ],
-                ),
+                    );
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SkillListContent(model: model, uiHelpers: uiHelpers),
+                      SectionTwoRight(uiHelpers: uiHelpers, model: model)
+                    ],
+                  );
+                }),
               ],
             ),
           ),
         ));
+  }
+}
+
+class SectionTwoRight extends StatelessWidget {
+  const SectionTwoRight({
+    Key? key,
+    required this.uiHelpers,
+    required this.model,
+  }) : super(key: key);
+
+  final ScreenUiHelper? uiHelpers;
+  final HomeViewModel? model;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraint) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: constraint.maxWidth < 550 ? null : uiHelpers!.width! * 0.3,
+            child: Text(
+              PersonalDetails.shortIntro,
+              style: uiHelpers!.body!.copyWith(
+                  fontWeight: FontWeight.w400,
+                  height: 2,
+                  color: uiHelpers!.textPrimaryColor),
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          IconWrrapper(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+            onTap: () => model!.navigateToUrl(SocialLinks.githubLink),
+            child: Row(
+              children: [
+                Icon(
+                  ContactIcons.githubIcon,
+                  color: uiHelpers!.textPrimaryColor,
+                ),
+                const SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  'Github',
+                  style: uiHelpers!.buttonStyle,
+                )
+              ],
+            ),
+          )
+        ],
+      );
+    });
+  }
+}
+
+class SkillListContent extends StatelessWidget {
+  const SkillListContent({
+    Key? key,
+    required this.model,
+    required this.uiHelpers,
+  }) : super(key: key);
+
+  final HomeViewModel? model;
+  final ScreenUiHelper? uiHelpers;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: model!.skills.keys
+          .map((e) => Container(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                width: uiHelpers!.width! * 0.28,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: uiHelpers!.surfaceColor,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                          decoration: BoxDecoration(shape: BoxShape.circle),
+                          child: Image.asset(
+                            model!.skills[e]!,
+                            width: 40,
+                            height: 40,
+                          )),
+                      const SizedBox(width: 10),
+                      Text(
+                        e,
+                        style: uiHelpers!.title,
+                      )
+                    ],
+                  ),
+                ),
+              ))
+          .toList(),
+    );
   }
 }

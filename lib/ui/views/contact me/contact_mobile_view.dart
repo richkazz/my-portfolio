@@ -46,44 +46,60 @@ class ContactMobileView extends StatelessWidget {
                     ),
                   ),
                   uiHelpers!.verticalSpaceMedium,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    runSpacing: 5,
                     children: [
-                      FadeAnimation(
-                        yDistance: 30,
-                        delay: 1.25,
-                        child: IconWrrapper(
-                          child: Icon(
-                            ContactIcons.githubIcon,
-                            color: uiHelpers!.textPrimaryColor,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FadeAnimation(
+                            yDistance: 30,
+                            delay: 1.25,
+                            child: IconWrrapper(
+                              child: Icon(
+                                ContactIcons.githubIcon,
+                                color: uiHelpers!.textPrimaryColor,
+                              ),
+                              onTap: () => model!
+                                  .navigateToSocial(SocialLinks.githubLink),
+                            ),
                           ),
-                          onTap: () =>
-                              model!.navigateToSocial(SocialLinks.githubLink),
-                        ),
+                        ],
                       ),
-                      FadeAnimation(
-                        yDistance: 30,
-                        delay: 1.25,
-                        child: IconWrrapper(
-                          child: Icon(
-                            ContactIcons.twitterIcon,
-                            color: uiHelpers!.textPrimaryColor,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FadeAnimation(
+                            yDistance: 30,
+                            delay: 1.25,
+                            child: IconWrrapper(
+                              child: Icon(
+                                ContactIcons.twitterIcon,
+                                color: uiHelpers!.textPrimaryColor,
+                              ),
+                              onTap: () => model!
+                                  .navigateToSocial(SocialLinks.twitterLink),
+                            ),
                           ),
-                          onTap: () =>
-                              model!.navigateToSocial(SocialLinks.twitterLink),
-                        ),
+                        ],
                       ),
-                      FadeAnimation(
-                        yDistance: 30,
-                        delay: 1.25,
-                        child: IconWrrapper(
-                          child: Icon(
-                            ContactIcons.linkedinIcon,
-                            color: uiHelpers!.textPrimaryColor,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          FadeAnimation(
+                            yDistance: 30,
+                            delay: 1.25,
+                            child: IconWrrapper(
+                              child: Icon(
+                                ContactIcons.linkedinIcon,
+                                color: uiHelpers!.textPrimaryColor,
+                              ),
+                              onTap: () => model!
+                                  .navigateToSocial(SocialLinks.linkedinUrl),
+                            ),
                           ),
-                          onTap: () =>
-                              model!.navigateToSocial(SocialLinks.linkedinUrl),
-                        ),
+                        ],
                       )
                     ],
                   ),

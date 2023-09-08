@@ -6,7 +6,7 @@ import 'translate_on_hover.dart';
 class IconWrrapper extends HookWidget {
   final Widget? child;
   final EdgeInsets? padding;
-  final Function? onTap;
+  final VoidCallback? onTap;
   final Color? color;
   final EdgeInsets margin;
 
@@ -29,7 +29,7 @@ class IconWrrapper extends HookWidget {
       onExit: (event) => isHovered.value = false,
       child: Container(
           margin: margin,
-          padding: padding ?? const EdgeInsets.all(12),
+          //padding: padding ?? const EdgeInsets.all(12),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
@@ -37,12 +37,12 @@ class IconWrrapper extends HookWidget {
                 width: 2,
               )),
           child: ElevatedButton(
-            onPressed: onTap as void Function()?,
+            onPressed: onTap,
             style: ElevatedButton.styleFrom(
               visualDensity: VisualDensity(),
               backgroundColor: color ?? uiHelpers.backgroundColor,
             ),
-            child: child,
+            child: Center(child: child),
           )),
     ));
   }
